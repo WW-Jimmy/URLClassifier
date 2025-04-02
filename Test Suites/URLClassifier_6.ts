@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestSuiteEntity>
+   <description></description>
+   <name>URLClassifier_6</name>
+   <tag></tag>
+   <isRerun>false</isRerun>
+   <mailRecipient></mailRecipient>
+   <numberOfRerun>3</numberOfRerun>
+   <pageLoadTimeout>30</pageLoadTimeout>
+   <pageLoadTimeoutDefault>true</pageLoadTimeoutDefault>
+   <rerunFailedTestCasesOnly>false</rerunFailedTestCasesOnly>
+   <rerunImmediately>true</rerunImmediately>
+   <testSuiteGuid>7794aa4a-c20f-4c67-98a8-5d10a03f8b76</testSuiteGuid>
+   <testCaseLink>
+      <guid>6d42de67-9d00-49f8-97d1-ecb3b06b3876</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/SamsungURLClassifier</testCaseId>
+      <testDataLink>
+         <combinationType>ONE</combinationType>
+         <id>d1621e2c-4f21-4751-9e26-fe994e944093</id>
+         <iterationEntity>
+            <iterationType>ALL</iterationType>
+            <value></value>
+         </iterationEntity>
+         <testDataId>Data Files/Data6</testDataId>
+      </testDataLink>
+      <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
+      <variableLink>
+         <testDataLinkId>d1621e2c-4f21-4751-9e26-fe994e944093</testDataLinkId>
+         <type>DATA_COLUMN</type>
+         <value>Site</value>
+         <variableId>f11f06b5-bf5d-435f-b35d-faaf63312670</variableId>
+      </variableLink>
+      <variableLink>
+         <testDataLinkId>d1621e2c-4f21-4751-9e26-fe994e944093</testDataLinkId>
+         <type>DATA_COLUMN</type>
+         <value>URL</value>
+         <variableId>3dd0fabd-2612-4329-92a0-2bf514cf0130</variableId>
+      </variableLink>
+   </testCaseLink>
+</TestSuiteEntity>
