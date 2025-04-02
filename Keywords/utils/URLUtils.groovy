@@ -30,7 +30,10 @@ public class URLUtils {
 	@Keyword
 	static String extractDomainSuffix(String url) {
 		try {
-			if (url && url.contains("samsung.com/")) {
+			if (url?.contains("samsung.com.cn/")) {
+				// Only for CN Case
+				return "cn/" + url.split("samsung.com.cn/")[1]
+			} else if (url?.contains("samsung.com/")) {
 				return url.split("samsung.com/")[1]
 			}
 		} catch (Exception e) {
@@ -106,9 +109,9 @@ public class URLUtils {
 			}
 
 			// PCD have Only exact '2' segment (CountryCode, and Category)
-			if (segments.size() == 2) {
-				String category = segments[1].toLowerCase()
-				return SamsungURLConstants.PRODUCT_CATEGORIES.contains(category)
+			if (segments.size() == 3 && segments[1] == "business") {
+			    String category = segments[2]
+			    return SamsungURLConstants.PRODUCT_CATEGORIES.contains(category)
 			}
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Error occured while checking PCD page: " + e.getMessage())
