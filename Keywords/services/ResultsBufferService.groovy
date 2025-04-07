@@ -23,7 +23,7 @@ import internal.GlobalVariable
 
 public class ResultsBufferService {
 	// Static List for Save Results
-	private static final List<Map<String, String>> resultBuffer = []
+	private static final Map<String, List<Map<String, String>>> resultMapByCountry = [:].withDefault { [] }
 
 	// Processed URL Counter
 	private static int  processedCount = 0
@@ -38,57 +38,50 @@ public class ResultsBufferService {
 			'classification': classification
 		]
 
-		resultBuffer.add(result)
+		resultMapByCountry[countryCode] << result
 		processedCount++
 	}
 
-	static void saveToFile(String filePath) {
-		if (resultBuffer.isEmpty()) {
-			KeywordUtil.logInfo("No Results for Save")
+	static void saveToFilePerCountry(String baseDirPath) {
+		if (resultMapByCountry.isEmpty()) {
+			KeywordUtil.logInfo("No Results to Save.")
 			return
 		}
 
-		try {
-			// Create Directories if needed
-			File file = new File(filePath)
-			file.getParentFile()?.mkdirs()
+		File baseDir = new File(baseDirPath)
+		baseDir.mkdirs()
 
+		resultMapByCountry.each { countryCode, results ->
+			try {
+				File file = new File(baseDir, "${countryCode}_Test_result.txt")
+				BufferedWriter bw = new BufferedWriter(new FileWriter(file, false))
 
-			// Ready to Write File
-			FileWriter fw = new FileWriter(file, false)
-			BufferedWriter bw = new BufferedWriter(fw)
-
-			// Write Header
-			bw.write("CountryCode, OriginalUrl, FinalUrl, Classification")
-			bw.newLine()
-
-			// Write All Results
-			int count = 0
-			resultBuffer.each { result ->
-				String line = "${result.countryCode}, ${result.originalUrl}, ${result.finalUrl}, ${result.classification}"
-				bw.write(line)
+				bw.write("CountryCode,OriginalUrl,FinalUrl,Classification")
 				bw.newLine()
-				count++
+
+				results.each { result ->
+					bw.write("${result.countryCode},${result.originalUrl},${result.finalUrl},${result.classification}")
+					bw.newLine()
+				}
+
+				bw.flush()
+				bw.close()
+
+				KeywordUtil.logInfo("Saved ${results.size()} results for [$countryCode] to file: ${file.absolutePath}")
+			} catch (Exception e) {
+				KeywordUtil.logInfo("***!!! Error saving file for [$countryCode]: ${e.toString()}")
 			}
-
-			// Close File
-			bw.flush()
-			bw.close()
-			fw.close()
-
-			KeywordUtil.logInfo("Successed to Save Results: $count, File: ${filePath}")
-		} catch (Exception e) {
-			KeywordUtil.logInfo("Error Occured while saving results" + e.toString())
 		}
 	}
 
 	static void clearBuffer() {
-		resultBuffer.clear()
+		resultMapByCountry.clear()
 		processedCount = 0
-		KeywordUtil.logInfo("Cleared ResultBuffer")
+		KeywordUtil.logInfo("Cleared all Buffered Results...")
 	}
 
 	static int getProcessedCount() {
 		return processedCount
 	}
 }
+

@@ -11,7 +11,7 @@
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'C:\\\\Users\\\\user\\\\Katalon Studio\\\\URLClassifier\\\\Test_Result.txt  '</initValue>
+      <initValue>'C:\\\\Users\\\\user\\\\Katalon Studio\\\\URLClassifier\\\\Test_Results'</initValue>
       <name>resultFilePath</name>
    </GlobalVariableEntity>
 </GlobalVariableEntities>

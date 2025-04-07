@@ -19,16 +19,10 @@ public class URLPatternClassifier {
 			return "Go to Next Step"
 		}
 
-		// Convert URL to lowercase for consistent matching
+		// Convert URL to lower-case for consistent matching
 		url = url.toLowerCase()
 
 		try {
-			// Basic URL validation
-			if (!url.contains("samsung.com/")) {
-				KeywordUtil.logInfo("Not a Samsung URL: " + url)
-				return "Go to Next Step"
-			}
-
 			// Step 1: Check for home page
 			if (isHomePage(url)) {
 				KeywordUtil.logInfo("Classified as Home Page: " + url)
@@ -65,40 +59,32 @@ public class URLPatternClassifier {
 				return "PFS"
 			}
 
-			// Step 7: Check for PCD (Product Category Detail) page
-			if (URLUtils.isPCDPage(url)) {
-				KeywordUtil.logInfo("Classified as PCD Page: " + url)
-				return "PCD"
-			}
-
 			// No matching pattern found
 			KeywordUtil.logInfo("Could not classify URL pattern: " + url)
 			return "Go to Next Step"
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Error occurred during URL pattern classification: " + e.toString())
-			return "Go to Next Step"
+			return "Error:URLInspection"
 		}
 	}
 
 	private boolean isHomePage(String url) {
-		String countryCode = URLUtils.extractCountryCode(url)
 		String afterDomain = URLUtils.extractDomainSuffix(url)
+		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
 
-		// Check if domain suffix matches country code (with or without trailing slash)
-		if (afterDomain.equals(countryCode.toLowerCase() + "/") ||
-				afterDomain.equals(countryCode.toLowerCase())) {
-			return true
+		if (url.contains("samsung.com.cn")) {
+			return afterDomain == "" || afterDomain == "business"
 		}
+		
+		String countryCode = URLUtils.extractCountryCode(url)
+		def expectedPaths = [
+			"${countryCode.toLowerCase()}".toString(),
+			"${countryCode.toLowerCase()}/business".toString()
+		]
 
-		// Check for business homepage
-		if (afterDomain.equals(countryCode.toLowerCase() + "/business/") ||
-				afterDomain.equals(countryCode.toLowerCase() + "/business")) {
-			return true
-		}
-
-		return false
+		boolean match = expectedPaths.any { it == afterDomain }
+		return match
 	}
-
 
 	private boolean isFooterPage(String url) {
 		return url.contains("/footer/")
@@ -117,18 +103,16 @@ public class URLPatternClassifier {
 		String countryCode = URLUtils.extractCountryCode(url)
 		String afterDomain = URLUtils.extractDomainSuffix(url)
 
-		// Check for exact match of mobile page
-		if (afterDomain.equals(countryCode.toLowerCase() + "/mobile/") ||
-				afterDomain.equals(countryCode.toLowerCase() + "/mobile")) {
-			return true
-		}
+		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
 
-		// Check for exact match of home appliances page
-		if (afterDomain.equals(countryCode.toLowerCase() + "/home-appliances/") ||
-				afterDomain.equals(countryCode.toLowerCase() + "/home-appliances")) {
-			return true
-		}
+		def expectedPaths = [
+			"${countryCode.toLowerCase()}/mobile".toString(),
+			"${countryCode.toLowerCase()}/home-appliances".toString(),
+			"${countryCode.toLowerCase()}/business/mobile".toString(),
+			"${countryCode.toLowerCase()}/business/home-appliances".toString()
+		]
 
-		return false
+		boolean match = expectedPaths.any { it.toString() == afterDomain }
+		return match
 	}
 }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>offer_bundle_component</name>
+   <name>product_detail_header</name>
    <tag></tag>
-   <elementGuidId>8c9b2df2-9cb9-49eb-bf5e-dde378ee5672</elementGuidId>
+   <elementGuidId>936cf48b-bdf2-43b9-b80e-8747afce1084</elementGuidId>
    <selectorCollection>
       <entry>
          <key>CSS</key>
-         <value>.bundle-builder-component</value>
+         <value>.pd-g-product-detail-header-ux2, .pd-g-feature-benefit-ux2, .pd-g-product-detail-kv-ux2&#xd;
+</value>
       </entry>
       <entry>
          <key>BASIC</key>
-         <value></value>
       </entry>
    </selectorCollection>
    <selectorMethod>CSS</selectorMethod>

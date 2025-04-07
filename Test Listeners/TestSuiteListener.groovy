@@ -20,11 +20,11 @@ import com.kms.katalon.core.annotation.AfterTestCase
 import com.kms.katalon.core.annotation.AfterTestSuite
 import com.kms.katalon.core.context.TestCaseContext
 import com.kms.katalon.core.context.TestSuiteContext
+import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 
 import com.kms.katalon.core.util.KeywordUtil
 import org.openqa.selenium.WebDriver
 import services.ResultsBufferService
-import utils.DriverManager
 
 
 class TestSuiteListener {
@@ -38,6 +38,9 @@ class TestSuiteListener {
 			// Clear past Result
 			ResultsBufferService.clearBuffer()
 			
+			// Open Browser
+			WebUI.openBrowser('')
+			
 		} catch (Exception e) {
 			KeywordUtil.markError("Error occured while Initialize Test Suite : ${e.toString()}")
 				
@@ -50,7 +53,7 @@ class TestSuiteListener {
 			KeywordUtil.logInfo("Testsuite Complete, Saving Results...")
 			
 			// Save Result to File
-			ResultsBufferService.saveToFile(RESULTS_FILE_PATH)
+			ResultsBufferService.saveToFilePerCountry(RESULTS_FILE_PATH)
 			
 			// Count processed URL
 			int processedCount = ResultsBufferService.getProcessedCount()
@@ -59,8 +62,8 @@ class TestSuiteListener {
 			// Clear Buffer
 			ResultsBufferService.clearBuffer()
 			
-			// Clear Driver
-			DriverManager.quitDriver()
+			// Clear Browser
+			WebUI.closeBrowser()
 			
 		} catch (Exception e) {
 			KeywordUtil.markError("Error occured while finishing Test Suite : ${e.toString()}")

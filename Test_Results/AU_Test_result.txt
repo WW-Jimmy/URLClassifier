@@ -1,0 +1,6 @@
+CountryCode,OriginalUrl,FinalUrl,Classification
+AU,https://www.samsung.com/au/unpacked/,https://www.samsung.com/au/,Home
+AU,https://www.samsung.com/au/business/,https://www.samsung.com/au/business/,Home
+AU,https://www.samsung.com/au/,https://www.samsung.com/au/,Home
+AU,https://www.samsung.com/au/mobile,https://www.samsung.com/au/mobile/,PFS
+AU,https://www.samsung.com/au/home-appliances,https://www.samsung.com/au/home-appliances/,PFS

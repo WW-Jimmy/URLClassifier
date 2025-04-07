@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TestSuiteEntity>
    <description></description>
-   <name>URLClassifier_5</name>
+   <name>MX_Suite</name>
    <tag></tag>
    <isRerun>false</isRerun>
    <mailRecipient></mailRecipient>
@@ -10,30 +10,30 @@
    <pageLoadTimeoutDefault>true</pageLoadTimeoutDefault>
    <rerunFailedTestCasesOnly>false</rerunFailedTestCasesOnly>
    <rerunImmediately>true</rerunImmediately>
-   <testSuiteGuid>af3763e8-b4da-435c-a5eb-f684b288daab</testSuiteGuid>
+   <testSuiteGuid>02ba1dfe-0bd4-4a0d-8ef7-8509a6d36bed</testSuiteGuid>
    <testCaseLink>
-      <guid>23b4a5f0-02e9-4c3b-aae9-7c4bfa78547f</guid>
+      <guid>c9538fd2-dee6-46ab-a7d9-47c0f31a125b</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/SamsungURLClassifier</testCaseId>
       <testDataLink>
          <combinationType>ONE</combinationType>
-         <id>c2a32df2-b5c9-4452-a075-dc4655565f86</id>
+         <id>4de58fe9-432f-430d-9b7b-9057069ce834</id>
          <iterationEntity>
             <iterationType>ALL</iterationType>
             <value></value>
          </iterationEntity>
-         <testDataId>Data Files/Data5</testDataId>
+         <testDataId>Data Files/MX_Data</testDataId>
       </testDataLink>
       <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
       <variableLink>
-         <testDataLinkId>c2a32df2-b5c9-4452-a075-dc4655565f86</testDataLinkId>
+         <testDataLinkId>4de58fe9-432f-430d-9b7b-9057069ce834</testDataLinkId>
          <type>DATA_COLUMN</type>
-         <value>Site</value>
+         <value>Country</value>
          <variableId>f11f06b5-bf5d-435f-b35d-faaf63312670</variableId>
       </variableLink>
       <variableLink>
-         <testDataLinkId>c2a32df2-b5c9-4452-a075-dc4655565f86</testDataLinkId>
+         <testDataLinkId>4de58fe9-432f-430d-9b7b-9057069ce834</testDataLinkId>
          <type>DATA_COLUMN</type>
          <value>URL</value>
          <variableId>3dd0fabd-2612-4329-92a0-2bf514cf0130</variableId>

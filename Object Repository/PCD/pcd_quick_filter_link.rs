@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>product_buying_cta_button</name>
+   <name>pcd_quick_filter_link</name>
    <tag></tag>
-   <elementGuidId>936cf48b-bdf2-43b9-b80e-8747afce1084</elementGuidId>
+   <elementGuidId>740f6813-406c-4cbb-a3df-38e3f6502140</elementGuidId>
    <selectorCollection>
-      <entry>
-         <key>CSS</key>
-         <value>.pd-buying-price__cta a.js-buy-now, .pd-buying-price__cta a.tg-add-to-cart</value>
-      </entry>
       <entry>
          <key>BASIC</key>
          <value></value>
+      </entry>
+      <entry>
+         <key>CSS</key>
+         <value>.nv18-quick-filter__item > a</value>
       </entry>
    </selectorCollection>
    <selectorMethod>CSS</selectorMethod>

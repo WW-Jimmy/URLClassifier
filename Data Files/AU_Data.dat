@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataFileEntity>
    <description></description>
-   <name>Data8</name>
+   <name>AU_Data</name>
    <tag></tag>
    <connectionProperties/>
    <containsHeaders>true</containsHeaders>
    <csvSeperator></csvSeperator>
-   <dataFileGUID>c3f70e2f-9e93-40c7-831b-a126c8b703c4</dataFileGUID>
-   <dataSourceUrl>C:\Users\user\Katalon Studio\URLClassifier\Data Files\split_files\split_8_of_8.xlsx</dataSourceUrl>
+   <dataFileGUID>173f4896-460c-44ee-ab4b-c6f783d69155</dataFileGUID>
+   <dataSourceUrl>C:\Users\user\Katalon Studio\URLClassifier\Data Files\Sample\Refined\url_by_country.xlsx</dataSourceUrl>
    <driver>ExcelFile</driver>
    <isInternalPath>false</isInternalPath>
    <query></query>
    <secureUserAccount>false</secureUserAccount>
-   <sheetName>Sheet1</sheetName>
+   <sheetName>AU</sheetName>
    <usingGlobalDBSetting>false</usingGlobalDBSetting>
 </DataFileEntity>

@@ -25,26 +25,32 @@ import constant.SamsungURLConstants
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.JavascriptExecutor
+import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
+import com.kms.katalon.core.webui.driver.DriverFactory
+import org.openqa.selenium.By
 
 public class URLUtils {
 	@Keyword
 	static String extractDomainSuffix(String url) {
-		try {
-			if (url?.contains("samsung.com.cn/")) {
-				// Only for CN Case
-				return "cn/" + url.split("samsung.com.cn/")[1]
-			} else if (url?.contains("samsung.com/")) {
-				return url.split("samsung.com/")[1]
+			try {
+			if (url?.contains("samsung.com.cn")) {
+				return url.split("samsung.com.cn", 2)[1].replaceFirst("^/+", "")
+			} else if (url?.contains("samsung.com")) {
+				return url.split("samsung.com", 2)[1].replaceFirst("^/+", "")
 			}
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Failed to Extract Domain Suffix: " + e.getMessage())
 		}
-		return ""
+		return "UNKNOWN"
 	}
 
 	@Keyword
 	static String extractCountryCode(String url) {
 		try {
+			// Special Case for CN
+			if (url?.contains("samsung.com.cn")) return "CN"
+			
+			// Normal Case for others
 			String afterDomain = extractDomainSuffix(url)
 			if (afterDomain) {
 				String countryCode = afterDomain.split("/")[0]
@@ -59,7 +65,7 @@ public class URLUtils {
 	}
 
 	@Keyword
-	static Map<String, Object> checkRedirect(String url, WebDriver driver){
+	static Map<String, Object> checkRedirect(String url){
 		String finalUrl = url
 		boolean redirected = false
 
@@ -70,54 +76,21 @@ public class URLUtils {
 				return [finalUrl: finalUrl, redirected: redirected]
 			}
 
-			if (driver == null) {
-				throw new IllegalArgumentException("WebDriver must be provided in concurrent context.")
-			}
-
 			// URL Navigate
 			KeywordUtil.logInfo("Open URL : " + url)
-			driver.navigate().to(url)
+			WebUI.navigateToUrl(url)
 
 			// Check Redirect
-			String currentUrl = driver.getCurrentUrl()
+			String currentUrl = WebUI.getUrl()
 			if (currentUrl && currentUrl != url) {
 				finalUrl = currentUrl
 				redirected = true
-				KeywordUtil.logInfo("Redirect: " + url + " -> " + finalUrl)
 			}
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Redirect check error: " + e.message)
 		}
 
 		return [finalUrl: finalUrl, redirected: redirected]
-	}
-
-	@Keyword
-	static boolean isPCDPage(String url) {
-		try {
-			String afterDomain = extractDomainSuffix(url)
-			if (afterDomain.endsWith("/")) {
-				afterDomain = afterDomain.substring(0, afterDomain.length() - 1)
-			}
-
-			// Divide with "/" to inspect Path Segment
-			List<String> segments = []
-			for (String segment :afterDomain.split("/")) {
-				if (segment?.trim()) {
-					segments.add(segment.toLowerCase().trim())
-				}
-			}
-
-			// PCD have Only exact '2' segment (CountryCode, and Category)
-			if (segments.size() == 3 && segments[1] == "business") {
-			    String category = segments[2]
-			    return SamsungURLConstants.PRODUCT_CATEGORIES.contains(category)
-			}
-		} catch (Exception e) {
-			KeywordUtil.markWarning("Error occured while checking PCD page: " + e.getMessage())
-		}
-
-		return false
 	}
 
 	@Keyword
@@ -130,6 +103,29 @@ public class URLUtils {
 			}
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Error occured while checking OOS page: " + e.getMessage())
+		}
+	}
+
+	@Keyword
+	static void closeAllPopups() {
+		try {
+			String css = "#truste-consent-button, #privacyBtn, [data-an-la='cookie bar:accept'], [an-ac='cookie bar:accept'],"
+			css += "#preferenceCheckBtn, .cta--black.login-leave-btn"
+			boolean found = false
+			new WebDriverWait(DriverFactory.webDriver, 3, 1000).ignoring(Exception.class).until({ driver ->
+				def elms = driver.findElements(By.cssSelector(css)).findAll({ it.displayed })
+				if (elms.size()) {
+					def terms = driver.findElements(By.cssSelector("#privacy-terms, #privacy-terms2"))
+					WebUI.executeJavaScript("for (const e of arguments) e.click()", terms)
+					WebUI.executeJavaScript("for (const e of arguments) e.click()", elms)
+					WebUI.executeJavaScript('a=document.createElement("style");a.innerHTML="iframe.fpw-view, #spr-live-chat-app {display:none !important}";document.head.appendChild(a)', null)
+					found = true
+					return false
+				}
+				return found
+			})
+		} catch (Exception e) {
+			KeywordUtil.markWarning("Unable to close all popup: " + e.message)
 		}
 	}
 }
