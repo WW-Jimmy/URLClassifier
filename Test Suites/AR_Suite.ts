@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestSuiteEntity>
+   <description></description>
+   <name>AR_Suite</name>
+   <tag></tag>
+   <isRerun>false</isRerun>
+   <mailRecipient></mailRecipient>
+   <numberOfRerun>3</numberOfRerun>
+   <pageLoadTimeout>30</pageLoadTimeout>
+   <pageLoadTimeoutDefault>true</pageLoadTimeoutDefault>
+   <rerunFailedTestCasesOnly>false</rerunFailedTestCasesOnly>
+   <rerunImmediately>true</rerunImmediately>
+   <testSuiteGuid>16403f6a-b7bc-4f2d-8237-6804682e83a6</testSuiteGuid>
+   <testCaseLink>
+      <guid>a3df5d7f-be42-42ba-9d58-13fcc009fa9b</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/SamsungURLClassifier</testCaseId>
+      <testDataLink>
+         <combinationType>ONE</combinationType>
+         <id>043665f0-20a4-4b71-98f8-9164fb4785cd</id>
+         <iterationEntity>
+            <iterationType>ALL</iterationType>
+            <value></value>
+         </iterationEntity>
+         <testDataId>Data Files/AR_Data</testDataId>
+      </testDataLink>
+      <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
+      <variableLink>
+         <testDataLinkId>043665f0-20a4-4b71-98f8-9164fb4785cd</testDataLinkId>
+         <type>DATA_COLUMN</type>
+         <value>Country</value>
+         <variableId>f11f06b5-bf5d-435f-b35d-faaf63312670</variableId>
+      </variableLink>
+      <variableLink>
+         <testDataLinkId>043665f0-20a4-4b71-98f8-9164fb4785cd</testDataLinkId>
+         <type>DATA_COLUMN</type>
+         <value>URL</value>
+         <variableId>3dd0fabd-2612-4329-92a0-2bf514cf0130</variableId>
+      </variableLink>
+   </testCaseLink>
+</TestSuiteEntity>

@@ -73,13 +73,12 @@ public class URLPatternClassifier {
 		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
 
 		if (url.contains("samsung.com.cn")) {
-			return afterDomain == "" || afterDomain == "business"
+			return afterDomain == ""
 		}
-		
+
 		String countryCode = URLUtils.extractCountryCode(url)
 		def expectedPaths = [
-			"${countryCode.toLowerCase()}".toString(),
-			"${countryCode.toLowerCase()}/business".toString()
+			"${countryCode.toLowerCase()}".toString()
 		]
 
 		boolean match = expectedPaths.any { it == afterDomain }
@@ -108,8 +107,10 @@ public class URLPatternClassifier {
 		def expectedPaths = [
 			"${countryCode.toLowerCase()}/mobile".toString(),
 			"${countryCode.toLowerCase()}/home-appliances".toString(),
-			"${countryCode.toLowerCase()}/business/mobile".toString(),
-			"${countryCode.toLowerCase()}/business/home-appliances".toString()
+
+			// for CN
+			"mobile",
+			"home-appliances",
 		]
 
 		boolean match = expectedPaths.any { it.toString() == afterDomain }

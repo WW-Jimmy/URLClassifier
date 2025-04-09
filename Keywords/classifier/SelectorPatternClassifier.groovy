@@ -24,20 +24,20 @@ public class SelectorPatternClassifier {
 
 			String classification
 
-			// Step 1: Try PF classification
+			// Step 1: Try PD classification last
+			classification = classifyAsPD()
+			if (classification != "Go to Next Step") {
+				return classification
+			}
+
+			// Step 2: Try PF classification
 			classification = classifyAsPF()
 			if (classification != "Go to Next Step") {
 				return classification
 			}
 
-			// Step 2: Try PCD classification
+			// Step 3: Try PCD classification
 			classification = classifyAsPCD()
-			if (classification != "Go to Next Step") {
-				return classification
-			}
-
-			// Step 3: Try PD classification last
-			classification = classifyAsPD()
 			if (classification != "Go to Next Step") {
 				return classification
 			}

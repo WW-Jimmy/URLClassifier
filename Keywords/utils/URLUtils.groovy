@@ -32,11 +32,15 @@ import org.openqa.selenium.By
 public class URLUtils {
 	@Keyword
 	static String extractDomainSuffix(String url) {
-			try {
+		try {
 			if (url?.contains("samsung.com.cn")) {
-				return url.split("samsung.com.cn", 2)[1].replaceFirst("^/+", "")
+				return url.split("samsung.com.cn", 2)[1]
+						.replaceFirst("^/+", "")
+						.replaceAll("/+\$", "")
 			} else if (url?.contains("samsung.com")) {
-				return url.split("samsung.com", 2)[1].replaceFirst("^/+", "")
+				return url.split("samsung.com", 2)[1]
+						.replaceFirst("^/+", "")
+						.replaceAll("/+\$", "")
 			}
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Failed to Extract Domain Suffix: " + e.getMessage())
@@ -49,7 +53,7 @@ public class URLUtils {
 		try {
 			// Special Case for CN
 			if (url?.contains("samsung.com.cn")) return "CN"
-			
+
 			// Normal Case for others
 			String afterDomain = extractDomainSuffix(url)
 			if (afterDomain) {

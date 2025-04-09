@@ -26,14 +26,18 @@ public class SamsungURLConstants {
 		'account',
 		'apps',
 		'article',
+		'business',
 		'buy',
 		'buying-guide',
+		'edm',
+		'shop-faq',
 		'info',
 		'mypage',
 		'news',
 		'service',
 		'support',
-		'sustainability'
+		'sustainability',
+		'multistore',
 	] as Set
 
 	// Product Category List
