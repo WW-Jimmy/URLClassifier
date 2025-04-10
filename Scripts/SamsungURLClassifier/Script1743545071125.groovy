@@ -8,6 +8,7 @@ import internal.GlobalVariable as GlobalVariable
 
 import utils.URLUtils as URLUtils
 import services.ResultsBufferService as ResultsBufferService
+import services.URLCacheService as URLCacheService
 
 try {
 	// Step 1: Check Redirect URL to get Final URL
@@ -19,25 +20,34 @@ try {
         KeywordUtil.logInfo("URL Redirected: $url -> $finalUrl")
     }
     
-    // Step 2: Classify By URL Pattern
-    classification = CustomKeywords.'classifier.URLPatternClassifier.classifyByPattern'(url, finalUrl)
-    KeywordUtil.logInfo('URL Classification Result: ' + classification)
-
-    // Step 3: DOM Check - Only If URL Classification returns "Go to Next Step"
-    if (classification == 'Go to Next Step') {
-        KeywordUtil.logInfo('URL Classification unclear, Check DOM Selectors')
+    // Step 2: Check if finalURL is already in cache 
+	String cachedClassification = URLCacheService.checkCache(finalUrl)
+	if (cachedClassification) {
+		classification = cachedClassification
+		KeywordUtil.logInfo("Classification from cache " + classification)
+	} else {
+		// Step 3: Classify By URL Pattern  
+		classification = CustomKeywords.'classifier.URLPatternClassifier.classifyByPattern'(url, finalUrl)
+		KeywordUtil.logInfo('URL Classification Result: ' + classification)
+		
+		// Step 4: DOM Check - Only If URL Classification returns "Go to Next Step"
+		if (classification == 'Go to Next Step') {
+			KeywordUtil.logInfo('URL Classification unclear, Check DOM Selectors')
+		
+			classification = CustomKeywords.'classifier.SelectorPatternClassifier.classifyBySelector'(url, finalUrl)
+			KeywordUtil.logInfo("Selector Classification Result: ${classification}")
+		}
+		
+		URLCacheService.addToCache(finalUrl, classification)
+	}
 	
-        classification = CustomKeywords.'classifier.SelectorPatternClassifier.classifyBySelector'(url, finalUrl)
-		KeywordUtil.logInfo("Selector Classification Result: ${classification}")
-    }
-    
-	KeywordUtil.logInfo("🟨🟨🟨🟨 [최종 분류 결과] : ${classification} 🟨🟨🟨🟨")
+	KeywordUtil.logInfo("🟨🟨🟨🟨🟨 [최종 분류 결과] : ${classification} 🟨🟨🟨🟨🟨")
 	
-    // Step 4: Save Result
-	// Step 4-1: Extract Country Code
+    // Step 5: Save Result
+	// Step 5-1: Extract Country Code
     String countryCode = URLUtils.extractCountryCode(url)
 
-    // Step 4-2: Add Results to Buffer
+    // Step 5-2: Add Results to Buffer
     ResultsBufferService.addResult(countryCode, url, finalUrl, classification)
 }
 catch (Exception e) {

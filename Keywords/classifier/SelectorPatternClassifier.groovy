@@ -3,117 +3,75 @@ package classifier
 import com.kms.katalon.core.annotation.Keyword
 import com.kms.katalon.core.model.FailureHandling
 import com.kms.katalon.core.util.KeywordUtil
+import com.kms.katalon.core.webui.driver.DriverFactory
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import utils.URLUtils
 
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 
+import java.util.concurrent.TimeoutException
+
+import org.openqa.selenium.support.ui.WebDriverWait
+
 import internal.GlobalVariable
 
 public class SelectorPatternClassifier {
-	private static final int ELEMENT_VERIFICATION_TIMEOUT = 1
+	private static final def PAGE_TYPES = [
+		PF: [
+			selector: 'PF/product_filter_container',
+			description: 'PF Filter Container'
+		],
+		PCD: [
+			selector: 'PCD/pcd_quick_filter_link',
+			description: 'PCD Filter Container'
+		],
+		PD: [
+			selector: 'PD/product_detail_header',
+			description: 'Product Detail Header'
+		]
+	]
+
+	private static final def CLASSIFICATION_ORDER = ['PD', 'PF', 'PCD']
 
 	@Keyword
 	def classifyBySelector(String originalUrl, String finalUrl = null) {
-		// Use finalUrl if it's offered, or use originalUrl
-		String url = finalUrl ?: originalUrl
-		KeywordUtil.logInfo("Starting selector classification" + url)
+		def url = finalUrl ?: originalUrl
 
 		try {
 			URLUtils.closeAllPopups()
 
-			String classification
-
-			// Step 1: Try PD classification last
-			classification = classifyAsPD()
-			if (classification != "Go to Next Step") {
-				return classification
+			def result = CLASSIFICATION_ORDER.find { type ->
+				isElementDisplayed(type)
 			}
 
-			// Step 2: Try PF classification
-			classification = classifyAsPF()
-			if (classification != "Go to Next Step") {
-				return classification
-			}
-
-			// Step 3: Try PCD classification
-			classification = classifyAsPCD()
-			if (classification != "Go to Next Step") {
-				return classification
-			}
-
-			// If nothing classified until here, classified as 'Unclassified'
-			KeywordUtil.logInfo("Could not classify page using selectors: " + url)
-			return "Unclassified"
+			return result ?: "Unclassified"
 		} catch (Exception e) {
-			KeywordUtil.markWarning("Error occurred during selector classification: " + e.toString())
+			KeywordUtil.markWarning("Error Occured while classifying ${e.message}")
 			return "Error:DOMInspection"
 		}
 	}
 
-	private String classifyAsPF() {
+	private boolean isElementDisplayed(String type) {
+		def typeInfo = PAGE_TYPES[type]
+		def testObject = findTestObject(typeInfo.selector)
+
 		try {
-			boolean isProductFilterPresent = WebUI.verifyElementPresent(
-					findTestObject('PF/product_filter_container'),
-					ELEMENT_VERIFICATION_TIMEOUT,
-					FailureHandling.OPTIONAL
-					)
+			return new WebDriverWait(DriverFactory.webDriver, 1).until {
+				def elements = WebUI.findWebElements(testObject, 1)
+				def visibleElement = elements.find { it.displayed }
 
-			if (isProductFilterPresent) {
-				KeywordUtil.logInfo("Found PF Filter Container, Classified as PF")
-				return "PF"
-			} else {
-				KeywordUtil.logInfo("Cannot Find PF Container")
+				if (visibleElement) {
+					KeywordUtil.logInfo("Found: ${typeInfo.description}, Classified as: ${type}")
+					return true
+				}
+				return false
 			}
-
-			return "Go to Next Step"
+		} catch (TimeoutException e) {
+			KeywordUtil.logInfo("Could not find: ${typeInfo.description}")
+			return false
 		} catch (Exception e) {
-			KeywordUtil.markWarning("Error occurred while classifying PF: " + e.toString())
-			return "Error:DOMInspection"
-		}
-	}
-
-	private String classifyAsPCD() {
-		try {
-			boolean isPCDFilterPresent = WebUI.verifyElementPresent(
-					findTestObject('PCD/pcd_quick_filter_link'),
-					ELEMENT_VERIFICATION_TIMEOUT,
-					FailureHandling.OPTIONAL
-					)
-
-			if (isPCDFilterPresent) {
-				KeywordUtil.logInfo("Found PCD Filter Container, Classified as PCD")
-				return "PCD"
-			} else {
-				KeywordUtil.logInfo("Cannot Find PCD Container")
-			}
-
-			return "Go to Next Step"
-		} catch (Exception e) {
-			KeywordUtil.markWarning("Error occurred while classifying PCD: " + e.toString())
-			return "Error:DOMInspection"
-		}
-	}
-
-	private String classifyAsPD() {
-		try {
-			boolean isCTAPresent = WebUI.verifyElementPresent(
-					findTestObject('PD/product_detail_header'),
-					ELEMENT_VERIFICATION_TIMEOUT,
-					FailureHandling.OPTIONAL
-					)
-
-			if (isCTAPresent) {
-				KeywordUtil.logInfo("Found Product CTA Button, Classified as PD")
-				return "PD"
-			} else {
-				KeywordUtil.logInfo("Cannot Find PD CTA")
-			}
-
-			return "Go to Next Step"
-		} catch (Exception e) {
-			KeywordUtil.markWarning("Error occurred while classifying PD: " + e.toString())
-			return "Error:DOMInspection"
+			KeywordUtil.markWarning("Error checking ${type}: ${e.message}")
+			return false
 		}
 	}
 }

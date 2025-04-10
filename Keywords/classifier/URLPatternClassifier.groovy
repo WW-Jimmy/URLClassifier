@@ -23,19 +23,25 @@ public class URLPatternClassifier {
 		url = url.toLowerCase()
 
 		try {
-			// Step 1: Check for home page
+			// Step 1: Check for out-of-scope page
+			if (URLUtils.isOOSPage(url)) {
+				KeywordUtil.logInfo("Classified as Out-of-Scope Page: " + url)
+				return "OOS"
+			}
+
+			// Step 2: Check for home page
 			if (isHomePage(url)) {
 				KeywordUtil.logInfo("Classified as Home Page: " + url)
 				return "Home"
 			}
 
-			// Step 2: Check for footer page
+			// Step 3: Check for footer page
 			if (isFooterPage(url)) {
 				KeywordUtil.logInfo("Classified as Footer Page: " + url)
 				return "Footer"
 			}
 
-			// Step 3: Check for explore page
+			// Step 4: Check for explore page
 			if (isExplorePage(url)) {
 				KeywordUtil.logInfo("Classified as Explore Page: " + url)
 				return "Explore"
@@ -47,13 +53,7 @@ public class URLPatternClassifier {
 				return "Offer"
 			}
 
-			// Step 5: Check for out-of-scope page
-			if (URLUtils.isOOSPage(url)) {
-				KeywordUtil.logInfo("Classified as Out-of-Scope Page: " + url)
-				return "OOS"
-			}
-
-			// Step 6: Check for PFS (Product Family Showcase) page
+			// Step 5: Check for PFS (Product Family Showcase) page
 			if (isPFSPage(url)) {
 				KeywordUtil.logInfo("Classified as PFS Page: " + url)
 				return "PFS"
@@ -78,7 +78,7 @@ public class URLPatternClassifier {
 
 		String countryCode = URLUtils.extractCountryCode(url)
 		def expectedPaths = [
-			"${countryCode.toLowerCase()}".toString()
+			"${countryCode.toLowerCase()}"
 		]
 
 		boolean match = expectedPaths.any { it == afterDomain }
@@ -86,34 +86,68 @@ public class URLPatternClassifier {
 	}
 
 	private boolean isFooterPage(String url) {
-		return url.contains("/footer/")
-	}
+		String afterDomain = URLUtils.extractDomainSuffix(url)
+		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
 
-	private boolean isExplorePage(String url) {
-		return url.contains("/explore/")
-	}
+		if (url.contains("samsung.com.cn")) {
+			return afterDomain == "footer"
+		}
 
+		String countryCode = URLUtils.extractCountryCode(url)
+		def expectedPaths = [
+			"${countryCode.toLowerCase()}/footer"
+		]
 
-	private boolean isOfferPage(String url) {
-		return url.contains("/offer/")
+		boolean match = expectedPaths.any { it == afterDomain }
+		return match
 	}
 
 	private boolean isPFSPage(String url) {
-		String countryCode = URLUtils.extractCountryCode(url)
 		String afterDomain = URLUtils.extractDomainSuffix(url)
-
 		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
 
-		def expectedPaths = [
-			"${countryCode.toLowerCase()}/mobile".toString(),
-			"${countryCode.toLowerCase()}/home-appliances".toString(),
+		if (url.contains("samsung.com.cn")) {
+			def expectedPathsForCN = [
+				"mobile",
+				"home-appliances"
+			]
+			return expectedPathsForCN.any { it == afterDomain }
+		}
 
-			// for CN
-			"mobile",
-			"home-appliances",
+		String countryCode = URLUtils.extractCountryCode(url)
+		def expectedPaths = [
+			"${countryCode.toLowerCase()}/mobile",
+			"${countryCode.toLowerCase()}/home-appliances"
 		]
 
-		boolean match = expectedPaths.any { it.toString() == afterDomain }
-		return match
+		return expectedPaths.any { it == afterDomain }
+	}
+
+	private boolean isExplorePage(String url) {
+		def afterDomain = URLUtils.extractDomainSuffix(url)?.replaceAll(/^\/+|\/+$/, "").trim()
+		if (!afterDomain) return false
+
+		boolean isChina = url.contains(".com.cn")
+		def parts = afterDomain.split("/")
+
+		if (isChina) {
+			return parts.size() >= 1 && parts[0] == "explore"
+		} else {
+			return parts.size() >= 2 && parts[1] == "explore"
+		}
+	}
+
+	private boolean isOfferPage(String url) {
+		def afterDomain = URLUtils.extractDomainSuffix(url)?.replaceAll(/^\/+|\/+$/, "").trim()
+		if (!afterDomain) return false
+
+		boolean isChina = url.contains(".com.cn")
+		def parts = afterDomain.split("/")
+
+		if (isChina) {
+			return parts.size() >= 1 && parts[0] == "offer"
+		} else {
+			return parts.size() >= 2 && parts[1] == "offer"
+		}
 	}
 }

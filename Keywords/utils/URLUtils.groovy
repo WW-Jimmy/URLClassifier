@@ -83,6 +83,7 @@ public class URLUtils {
 			// URL Navigate
 			KeywordUtil.logInfo("Open URL : " + url)
 			WebUI.navigateToUrl(url)
+			WebUI.waitForPageLoad(5)
 
 			// Check Redirect
 			String currentUrl = WebUI.getUrl()
@@ -109,9 +110,16 @@ public class URLUtils {
 			KeywordUtil.markWarning("Error occured while checking OOS page: " + e.getMessage())
 		}
 	}
-
+	
+	private static boolean popupClosed = false
+	
 	@Keyword
 	static void closeAllPopups() {
+		if (popupClosed) {
+			KeywordUtil.logInfo("Already Closed Pop-up -> Skip")
+			return
+		}
+		
 		try {
 			String css = "#truste-consent-button, #privacyBtn, [data-an-la='cookie bar:accept'], [an-ac='cookie bar:accept'],"
 			css += "#preferenceCheckBtn, .cta--black.login-leave-btn"
@@ -128,6 +136,12 @@ public class URLUtils {
 				}
 				return found
 			})
+			
+			if (found) {
+				popupClosed = true
+				KeywordUtil.logInfo("Closed pop-up -> Will Skip afterwards")
+			}
+			
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Unable to close all popup: " + e.message)
 		}
