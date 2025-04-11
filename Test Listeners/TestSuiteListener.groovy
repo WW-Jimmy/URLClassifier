@@ -65,10 +65,6 @@ class TestSuiteListener {
 			int processedCount = ResultsBufferService.getProcessedCount()
 			KeywordUtil.logInfo("Processed URL: $processedCount")
 			
-			// Log Cache statistics
-			String cacheStats = URLCacheService.getCacheStats()
-			KeywordUtil.logInfo("URL Cache: ${cacheStats}")
-			
 			// Clear Buffer
 			ResultsBufferService.clearBuffer()
 			

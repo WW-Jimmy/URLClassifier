@@ -27,7 +27,6 @@ public class SamsungURLConstants {
 		'apps',
 		'article',
 		'business',
-		'buy',
 		'buying-guide',
 		'edm',
 		'shop-faq',

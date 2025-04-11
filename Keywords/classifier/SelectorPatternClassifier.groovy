@@ -34,9 +34,7 @@ public class SelectorPatternClassifier {
 	private static final def CLASSIFICATION_ORDER = ['PD', 'PF', 'PCD']
 
 	@Keyword
-	def classifyBySelector(String originalUrl, String finalUrl = null) {
-		def url = finalUrl ?: originalUrl
-
+	def classifyBySelector(String url) {
 		try {
 			URLUtils.closeAllPopups()
 
@@ -56,15 +54,18 @@ public class SelectorPatternClassifier {
 		def testObject = findTestObject(typeInfo.selector)
 
 		try {
-			return new WebDriverWait(DriverFactory.webDriver, 1).until {
-				def elements = WebUI.findWebElements(testObject, 1)
-				def visibleElement = elements.find { it.displayed }
+			return new WebDriverWait(DriverFactory.webDriver, 3).until { driver ->
+				try {
+					def element = WebUI.findWebElement(testObject, 1)
 
-				if (visibleElement) {
-					KeywordUtil.logInfo("Found: ${typeInfo.description}, Classified as: ${type}")
-					return true
+					if (element.displayed) {
+						KeywordUtil.logInfo("Found: ${typeInfo.description}, Classified as: ${type}")
+						return true
+					}
+					return false
+				} catch (Exception e) {
+					return false
 				}
-				return false
 			}
 		} catch (TimeoutException e) {
 			KeywordUtil.logInfo("Could not find: ${typeInfo.description}")

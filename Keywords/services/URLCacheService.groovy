@@ -26,47 +26,32 @@ public class URLCacheService {
 	// Static cache to store classified URLs
 	private static final Map<String, String> urlClassificationCache = [:]
 
-	// Cache hit counter for statistics
-	private static int cacheHitCount = 0
-
 	@Keyword
 	static String checkCache(String finalUrl) {
-		if (!finalUrl || finalUrl.trim().isEmpty()) {
-			return null
+		if (!finalUrl?.trim()) return null
+
+		def result = urlClassificationCache[finalUrl]
+		if (result) {
+			KeywordUtil.logInfo("[CACHE HIT]: ${finalUrl} -> ${result}")
 		}
 
-		String classification = urlClassificationCache[finalUrl]
-
-		if (classification) {
-			cacheHitCount++
-			KeywordUtil.logInfo("[CACHE HIT] URL found in cache: ${finalUrl} -> ${classification}")
-		}
-
-		return classification
+		return result
 	}
 
 	@Keyword
 	static void addToCache(String finalUrl, String classification) {
-		if(!finalUrl || finalUrl.trim().isEmpty() || !classification)
-			return
+		if(finalUrl?.trim().isEmpty() || !classification) return
 
-		// Only cache if it doesn't already exist
-		if (!urlClassificationCache.containsKey(finalUrl)) {
-			urlClassificationCache[finalUrl] = classification
-			KeywordUtil.logInfo("[CACHE ADD] URL added to cache: ${finalUrl} -> ${classification}")
-		}
-	}
-
-	@Keyword
-	static String getCacheStats() {
-		int totalEntries = urlClassificationCache.size()
-		return "Cache Stats: ${totalEntries} entries, ${cacheHitCount} hits"
+			// Only cache if it doesn't already exist
+			if (!urlClassificationCache.containsKey(finalUrl)) {
+				urlClassificationCache[finalUrl] = classification
+				KeywordUtil.logInfo("[CACHE ADD]: ${finalUrl} -> ${classification}")
+			}
 	}
 
 	@Keyword
 	static void clearCache() {
 		urlClassificationCache.clear()
-		cacheHitCount = 0
 		KeywordUtil.logInfo("URL Classification cache cleared")
 	}
 }

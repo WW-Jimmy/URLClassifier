@@ -31,21 +31,34 @@ import org.openqa.selenium.By
 
 public class URLUtils {
 	@Keyword
+	static String trimSlashes(String path) {
+		if (path == null || path.isEmpty()) return ""
+
+		def result = path
+		while (result.startsWith('/')) result = result.substring(1)
+		while (result.endsWith('/')) result = result[0..-2]
+
+		return result
+	}
+
+	@Keyword
 	static String extractDomainSuffix(String url) {
 		try {
-			if (url?.contains("samsung.com.cn")) {
-				return url.split("samsung.com.cn", 2)[1]
-						.replaceFirst("^/+", "")
-						.replaceAll("/+\$", "")
-			} else if (url?.contains("samsung.com")) {
-				return url.split("samsung.com", 2)[1]
-						.replaceFirst("^/+", "")
-						.replaceAll("/+\$", "")
+			if (!url?.trim()) return ""
+			String result = ""
+
+			if (url.contains("samsung.com.cn")) {
+				result = url.split("samsung.com.cn", 2)[1]
+			} else if (url.contains("samsung.com")) {
+				result = url.split("samsung.com", 2)[1]
+			} else {
+				return ""
 			}
+			return trimSlashes(result)
 		} catch (Exception e) {
-			KeywordUtil.markWarning("Failed to Extract Domain Suffix: " + e.getMessage())
+			KeywordUtil.markWarning("Failed to extract Domain Suffix: " + e.getMessage())
+			return ""
 		}
-		return "UNKNOWN"
 	}
 
 	@Keyword
@@ -69,15 +82,14 @@ public class URLUtils {
 	}
 
 	@Keyword
-	static Map<String, Object> checkRedirect(String url){
+	static String checkRedirect(String url){
 		String finalUrl = url
-		boolean redirected = false
 
 		try {
 			// Verify if URL is valid
 			if (!url?.trim()) {
 				KeywordUtil.logInfo("Empty URL")
-				return [finalUrl: finalUrl, redirected: redirected]
+				return finalUrl
 			}
 
 			// URL Navigate
@@ -86,40 +98,50 @@ public class URLUtils {
 			WebUI.waitForPageLoad(5)
 
 			// Check Redirect
-			String currentUrl = WebUI.getUrl()
+			def currentUrl = WebUI.getUrl()
+
 			if (currentUrl && currentUrl != url) {
 				finalUrl = currentUrl
-				redirected = true
+				KeywordUtil.logInfo("URL Redirected: $url -> $finalUrl")
 			}
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Redirect check error: " + e.message)
 		}
-
-		return [finalUrl: finalUrl, redirected: redirected]
+		return finalUrl
 	}
 
 	@Keyword
 	static boolean isOOSPage(String url) {
 		try {
-			for (String pathIdentifier : SamsungURLConstants.OOS_PATHS) {
-				if (url.contains("/" + pathIdentifier + "/")) {
-					return true
-				}
-			}
+			// Exception: only /buy/ located at the end of the segments
+			if (url =~ /.*\/buy\/?$/) return true
+
+			def afterDomain = extractDomainSuffix(url)
+			if (!afterDomain?.trim()) return false
+
+			def parts = afterDomain.split("/")
+
+			def isChina = url.contains("samsung.com.cn")
+			def result = isChina ?
+					(parts.size() >= 1 && SamsungURLConstants.OOS_PATHS.contains(parts[0])) :
+					(parts.size() >= 2 && SamsungURLConstants.OOS_PATHS.contains(parts[1]))
+
+			return result
 		} catch (Exception e) {
-			KeywordUtil.markWarning("Error occured while checking OOS page: " + e.getMessage())
+			KeywordUtil.markWarning("Error occurred while checking OOS page: ${e.message}")
 		}
+		return false
 	}
-	
+
 	private static boolean popupClosed = false
-	
+
 	@Keyword
 	static void closeAllPopups() {
 		if (popupClosed) {
 			KeywordUtil.logInfo("Already Closed Pop-up -> Skip")
 			return
 		}
-		
+
 		try {
 			String css = "#truste-consent-button, #privacyBtn, [data-an-la='cookie bar:accept'], [an-ac='cookie bar:accept'],"
 			css += "#preferenceCheckBtn, .cta--black.login-leave-btn"
@@ -136,12 +158,11 @@ public class URLUtils {
 				}
 				return found
 			})
-			
+
 			if (found) {
 				popupClosed = true
 				KeywordUtil.logInfo("Closed pop-up -> Will Skip afterwards")
 			}
-			
 		} catch (Exception e) {
 			KeywordUtil.markWarning("Unable to close all popup: " + e.message)
 		}

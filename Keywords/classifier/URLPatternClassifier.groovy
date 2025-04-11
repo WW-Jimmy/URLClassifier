@@ -4,150 +4,97 @@ import com.kms.katalon.core.annotation.Keyword
 import com.kms.katalon.core.util.KeywordUtil
 import utils.URLUtils
 import constant.SamsungURLConstants
-import internal.GlobalVariable as GlobalVariable
 
 public class URLPatternClassifier {
 
 	@Keyword
-	def classifyByPattern(String originalUrl, String finalUrl = null) {
-		// Use finalUrl if provided, otherwise fallback to originalUrl
-		String url = finalUrl ?: originalUrl
-
-		// Skip if the URL is empty
-		if (!url || url.trim().isEmpty()) {
-			KeywordUtil.logInfo("An empty URL was provided.")
+	def classifyByPattern(String url) {
+		if (!url?.trim()) {
+			KeywordUtil.logInfo("Empty URL has provided.")
 			return "Go to Next Step"
 		}
 
-		// Convert URL to lower-case for consistent matching
 		url = url.toLowerCase()
 
 		try {
-			// Step 1: Check for out-of-scope page
-			if (URLUtils.isOOSPage(url)) {
-				KeywordUtil.logInfo("Classified as Out-of-Scope Page: " + url)
-				return "OOS"
-			}
+			def pageTypes = [
+				[check: { -> URLUtils.isOOSPage(url) }, type: "OOS"],
+				[check: { -> isHomePage(url) }, type: "Home"],
+				[check: { -> isFooterPage(url) }, type: "Footer"],
+				[check: { -> isPathTypePage(url, "explore") }, type: "Explore"],
+				[check: { -> isPathTypePage(url, "offer") }, type: "Offer"],
+				[check: { -> isPFSPage(url) }, type: "PFS"]
+			]
 
-			// Step 2: Check for home page
-			if (isHomePage(url)) {
-				KeywordUtil.logInfo("Classified as Home Page: " + url)
-				return "Home"
+			for (def pageType : pageTypes) {
+				if (pageType.check()) {
+					KeywordUtil.logInfo("${pageType.type} - ${url}")
+					return pageType.type
+				}
 			}
-
-			// Step 3: Check for footer page
-			if (isFooterPage(url)) {
-				KeywordUtil.logInfo("Classified as Footer Page: " + url)
-				return "Footer"
-			}
-
-			// Step 4: Check for explore page
-			if (isExplorePage(url)) {
-				KeywordUtil.logInfo("Classified as Explore Page: " + url)
-				return "Explore"
-			}
-
-			// Step 4: Check for offer page
-			if (isOfferPage(url)) {
-				KeywordUtil.logInfo("Classified as Offer Page: " + url)
-				return "Offer"
-			}
-
-			// Step 5: Check for PFS (Product Family Showcase) page
-			if (isPFSPage(url)) {
-				KeywordUtil.logInfo("Classified as PFS Page: " + url)
-				return "PFS"
-			}
-
-			// No matching pattern found
-			KeywordUtil.logInfo("Could not classify URL pattern: " + url)
 			return "Go to Next Step"
 		} catch (Exception e) {
-			KeywordUtil.markWarning("Error occurred during URL pattern classification: " + e.toString())
+			KeywordUtil.markWarning("Error occurred while Classfiying with URL Pattern: ${e.message}")
 			return "Error:URLInspection"
 		}
 	}
 
 	private boolean isHomePage(String url) {
-		String afterDomain = URLUtils.extractDomainSuffix(url)
-		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
-
-		if (url.contains("samsung.com.cn")) {
-			return afterDomain == ""
+		if (url?.contains("samsung.com.cn")) {
+			String path = URLUtils.extractDomainSuffix(url)
+			boolean isHome = (path == null || path.length() == 0)
+			return isHome
 		}
 
-		String countryCode = URLUtils.extractCountryCode(url)
-		def expectedPaths = [
-			"${countryCode.toLowerCase()}"
-		]
+		def afterDomain = URLUtils.extractDomainSuffix(url)
+		if (!afterDomain) return false
 
-		boolean match = expectedPaths.any { it == afterDomain }
-		return match
+		def countryCode = URLUtils.extractCountryCode(url).toLowerCase()
+		return afterDomain == countryCode
 	}
 
 	private boolean isFooterPage(String url) {
-		String afterDomain = URLUtils.extractDomainSuffix(url)
-		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
-
-		if (url.contains("samsung.com.cn")) {
-			return afterDomain == "footer"
+		if (url?.contains("samsung.com.cn")) {
+			String path = URLUtils.extractDomainSuffix(url)
+			return path == "footer"
 		}
 
-		String countryCode = URLUtils.extractCountryCode(url)
-		def expectedPaths = [
-			"${countryCode.toLowerCase()}/footer"
-		]
+		def afterDomain = URLUtils.extractDomainSuffix(url)
+		if (!afterDomain) return false
 
-		boolean match = expectedPaths.any { it == afterDomain }
-		return match
+		def countryCode = URLUtils.extractCountryCode(url).toLowerCase()
+		return afterDomain == "${countryCode}/footer"
 	}
+
 
 	private boolean isPFSPage(String url) {
-		String afterDomain = URLUtils.extractDomainSuffix(url)
-		afterDomain = afterDomain.toString().replaceAll(/\/+$/, "").trim()
+		def afterDomain = URLUtils.extractDomainSuffix(url)
+		if (!afterDomain) return false
 
 		if (url.contains("samsung.com.cn")) {
-			def expectedPathsForCN = [
-				"mobile",
-				"home-appliances"
-			]
-			return expectedPathsForCN.any { it == afterDomain }
+			return ["mobile", "home-appliances"].contains(afterDomain)
 		}
 
-		String countryCode = URLUtils.extractCountryCode(url)
+		def countryCode = URLUtils.extractCountryCode(url).toLowerCase()
 		def expectedPaths = [
-			"${countryCode.toLowerCase()}/mobile",
-			"${countryCode.toLowerCase()}/home-appliances"
+			"${countryCode}/mobile",
+			"${countryCode}/home-appliances"
 		]
 
-		return expectedPaths.any { it == afterDomain }
+		return expectedPaths.contains(afterDomain)
 	}
 
-	private boolean isExplorePage(String url) {
-		def afterDomain = URLUtils.extractDomainSuffix(url)?.replaceAll(/^\/+|\/+$/, "").trim()
+	private boolean isPathTypePage(String url, String pathType) {
+		def afterDomain = URLUtils.extractDomainSuffix(url)
 		if (!afterDomain) return false
 
-		boolean isChina = url.contains(".com.cn")
 		def parts = afterDomain.split("/")
+		boolean isChina = url.contains(".com.cn")
 
 		if (isChina) {
-			return parts.size() >= 1 && parts[0] == "explore"
+			return parts.size() >= 1 && parts[0].equalsIgnoreCase(pathType)
 		} else {
-			return parts.size() >= 2 && parts[1] == "explore"
-		}
-	}
-
-	private boolean isOfferPage(String url) {
-		def afterDomain = URLUtils.extractDomainSuffix(url)?.replaceAll(/^\/+|\/+$/, "").trim()
-		if (!afterDomain) return false
-
-		boolean isChina = url.contains(".com.cn")
-		def parts = afterDomain.split("/")
-
-		if (isChina) {
-			return parts.size() >= 1 && parts[0] == "offer"
-		} else {
-			return parts.size() >= 2 && parts[1] == "offer"
+			return parts.size() >= 2 && parts[1].equalsIgnoreCase(pathType)
 		}
 	}
 }

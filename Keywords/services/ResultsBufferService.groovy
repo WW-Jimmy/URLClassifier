@@ -30,12 +30,15 @@ public class ResultsBufferService {
 
 	// Add Results to Buffer
 	static synchronized void addResult(String countryCode, String originalUrl, String finalUrl, String classification) {
+		def redirected = originalUrl != finalUrl ? "O" : "X"
+
 		// Create Results Map
-		Map<String, String> result = [
+		def result = [
 			'countryCode': countryCode,
 			'originalUrl': originalUrl,
 			'finalUrl': finalUrl ?: originalUrl,
-			'classification': classification
+			'classification': classification,
+			redirected: redirected
 		]
 
 		resultMapByCountry[countryCode] << result
@@ -48,28 +51,20 @@ public class ResultsBufferService {
 			return
 		}
 
-		File baseDir = new File(baseDirPath)
-		baseDir.mkdirs()
+		new File(baseDirPath).mkdirs()
 
 		resultMapByCountry.each { countryCode, results ->
 			try {
-				File file = new File(baseDir, "${countryCode}_Test_result.txt")
-				BufferedWriter bw = new BufferedWriter(new FileWriter(file, false))
+				new File(baseDirPath, "${countryCode}_Test_result.txt").withWriter { writer ->
+					writer.writeLine("CountryCode,OriginalUrl,FinalUrl,Classification,Redirected")
 
-				bw.write("CountryCode,OriginalUrl,FinalUrl,Classification")
-				bw.newLine()
-
-				results.each { result ->
-					bw.write("${result.countryCode},${result.originalUrl},${result.finalUrl},${result.classification}")
-					bw.newLine()
+					results.each { result ->
+						writer.writeLine("${result.countryCode},${result.originalUrl},${result.finalUrl},${result.classification},${result.redirected}")
+					}
 				}
-
-				bw.flush()
-				bw.close()
-
-				KeywordUtil.logInfo("Saved ${results.size()} results for [$countryCode] to file: ${file.absolutePath}")
+				KeywordUtil.logInfo("Saved ${results.size()} results for ${countryCode} to file")
 			} catch (Exception e) {
-				KeywordUtil.logInfo("***!!! Error saving file for [$countryCode]: ${e.toString()}")
+				KeywordUtil.logInfo("***!!! Error saving file for $countryCode: ${e.message}")
 			}
 		}
 	}
