@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TestSuiteEntity>
    <description></description>
-   <name>SI_Suite</name>
+   <name>Exception_Suite</name>
    <tag></tag>
    <isRerun>false</isRerun>
    <mailRecipient></mailRecipient>
-   <numberOfRerun>0</numberOfRerun>
+   <numberOfRerun>3</numberOfRerun>
    <pageLoadTimeout>30</pageLoadTimeout>
    <pageLoadTimeoutDefault>true</pageLoadTimeoutDefault>
    <rerunFailedTestCasesOnly>false</rerunFailedTestCasesOnly>
-   <rerunImmediately>false</rerunImmediately>
-   <testSuiteGuid>245a4cf9-29ee-49f9-baa9-38cbc08caa7c</testSuiteGuid>
+   <rerunImmediately>true</rerunImmediately>
+   <testSuiteGuid>8e428323-d8d3-46ea-8f76-dd5ce4fc4d41</testSuiteGuid>
    <testCaseLink>
-      <guid>02d98d74-a5c2-4756-8c3f-435b869d8ee9</guid>
+      <guid>d9c0520c-5cc5-4a93-9b12-0f9ec322d21f</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/SamsungURLClassifier</testCaseId>
       <testDataLink>
          <combinationType>ONE</combinationType>
-         <id>11e64a08-d56d-4d17-8cab-2f426465afed</id>
+         <id>d83ac1fc-437c-41f6-a346-aa59c6f0282f</id>
          <iterationEntity>
             <iterationType>ALL</iterationType>
             <value></value>
          </iterationEntity>
-         <testDataId>Data Files/SI_Data</testDataId>
+         <testDataId>Data Files/EX_Data</testDataId>
       </testDataLink>
       <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
       <variableLink>
-         <testDataLinkId>11e64a08-d56d-4d17-8cab-2f426465afed</testDataLinkId>
+         <testDataLinkId>d83ac1fc-437c-41f6-a346-aa59c6f0282f</testDataLinkId>
          <type>DATA_COLUMN</type>
          <value>Site</value>
          <variableId>f11f06b5-bf5d-435f-b35d-faaf63312670</variableId>
       </variableLink>
       <variableLink>
-         <testDataLinkId>11e64a08-d56d-4d17-8cab-2f426465afed</testDataLinkId>
+         <testDataLinkId>d83ac1fc-437c-41f6-a346-aa59c6f0282f</testDataLinkId>
          <type>DATA_COLUMN</type>
          <value>URL</value>
          <variableId>3dd0fabd-2612-4329-92a0-2bf514cf0130</variableId>

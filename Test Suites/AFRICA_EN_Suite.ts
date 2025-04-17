@@ -29,7 +29,7 @@
       <variableLink>
          <testDataLinkId>05b9506a-4545-4e50-81d8-dd8184f9d194</testDataLinkId>
          <type>DATA_COLUMN</type>
-         <value>Country</value>
+         <value>Site</value>
          <variableId>f11f06b5-bf5d-435f-b35d-faaf63312670</variableId>
       </variableLink>
       <variableLink>

@@ -23,35 +23,23 @@ import com.kms.katalon.core.util.KeywordUtil
 import internal.GlobalVariable
 
 public class URLCacheService {
-	// Static cache to store classified URLs
 	private static final Map<String, String> urlClassificationCache = [:]
 
 	@Keyword
 	static String checkCache(String finalUrl) {
-		if (!finalUrl?.trim()) return null
-
 		def result = urlClassificationCache[finalUrl]
-		if (result) {
-			KeywordUtil.logInfo("[CACHE HIT]: ${finalUrl} -> ${result}")
-		}
-
 		return result
 	}
 
 	@Keyword
 	static void addToCache(String finalUrl, String classification) {
-		if(finalUrl?.trim().isEmpty() || !classification) return
-
-			// Only cache if it doesn't already exist
-			if (!urlClassificationCache.containsKey(finalUrl)) {
-				urlClassificationCache[finalUrl] = classification
-				KeywordUtil.logInfo("[CACHE ADD]: ${finalUrl} -> ${classification}")
-			}
+		if (!urlClassificationCache.containsKey(finalUrl)) {
+			urlClassificationCache[finalUrl] = classification
+		}
 	}
 
 	@Keyword
 	static void clearCache() {
 		urlClassificationCache.clear()
-		KeywordUtil.logInfo("URL Classification cache cleared")
 	}
 }

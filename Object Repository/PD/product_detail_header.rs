@@ -7,8 +7,7 @@
    <selectorCollection>
       <entry>
          <key>CSS</key>
-         <value>.pd-g-product-detail-header-ux2, .pd-g-feature-benefit-ux2, .pd-g-product-detail-kv-ux2&#xd;
-</value>
+         <value>.pd-g-product-detail-header-ux2:not([style*=&quot;display: none&quot;]), .pd-g-feature-benefit-ux2:not([style*=&quot;display: none&quot;])</value>
       </entry>
       <entry>
          <key>BASIC</key>

@@ -22,17 +22,11 @@ import com.kms.katalon.core.util.KeywordUtil
 import internal.GlobalVariable
 
 public class ResultsBufferService {
-	// Static List for Save Results
 	private static final Map<String, List<Map<String, String>>> resultMapByCountry = [:].withDefault { [] }
 
-	// Processed URL Counter
-	private static int  processedCount = 0
-
-	// Add Results to Buffer
 	static synchronized void addResult(String countryCode, String originalUrl, String finalUrl, String classification) {
-		def redirected = originalUrl != finalUrl ? "O" : "X"
+		def redirected = originalUrl != finalUrl ? "O" : ""
 
-		// Create Results Map
 		def result = [
 			'countryCode': countryCode,
 			'originalUrl': originalUrl,
@@ -42,7 +36,6 @@ public class ResultsBufferService {
 		]
 
 		resultMapByCountry[countryCode] << result
-		processedCount++
 	}
 
 	static void saveToFilePerCountry(String baseDirPath) {
@@ -62,7 +55,6 @@ public class ResultsBufferService {
 						writer.writeLine("${result.countryCode},${result.originalUrl},${result.finalUrl},${result.classification},${result.redirected}")
 					}
 				}
-				KeywordUtil.logInfo("Saved ${results.size()} results for ${countryCode} to file")
 			} catch (Exception e) {
 				KeywordUtil.logInfo("***!!! Error saving file for $countryCode: ${e.message}")
 			}
@@ -71,12 +63,7 @@ public class ResultsBufferService {
 
 	static void clearBuffer() {
 		resultMapByCountry.clear()
-		processedCount = 0
 		KeywordUtil.logInfo("Cleared all Buffered Results...")
-	}
-
-	static int getProcessedCount() {
-		return processedCount
 	}
 }
 

@@ -20,14 +20,12 @@ import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable
 
 public class SamsungURLConstants {
-	// Out of Scope Path Identifier
 	public static final Set<String> OOS_PATHS = [
 		'about-us',
 		'account',
 		'apps',
 		'article',
 		'business',
-		'buying-guide',
 		'edm',
 		'shop-faq',
 		'info',
@@ -38,8 +36,8 @@ public class SamsungURLConstants {
 		'sustainability',
 		'multistore',
 	] as Set
-
-	// Product Category List
+	
+	/*
 	public static final Set<String> PRODUCT_CATEGORIES = [
 		'air-conditioners',
 		'air-care',
@@ -57,4 +55,5 @@ public class SamsungURLConstants {
 		'washers-and-dryers',
 		'tablets'
 	] as Set
+	*/
 }

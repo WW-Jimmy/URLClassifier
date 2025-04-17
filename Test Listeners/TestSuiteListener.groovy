@@ -36,19 +36,13 @@ class TestSuiteListener {
 	@BeforeTestSuite
 	def beforeTestSuite(TestSuiteContext testSuiteContext) {
 		try {
-			KeywordUtil.logInfo("Test Suite Start: Initialize result Buffer")		
-			
-			// Clear past Result
 			ResultsBufferService.clearBuffer()
 			
-			// Clear URL classification cache
 			URLCacheService.clearCache()
 			
-			// Open Browser
 			WebUI.openBrowser('')
-			
 		} catch (Exception e) {
-			KeywordUtil.markError("Error occured while Initialize Test Suite : ${e.toString()}")
+			KeywordUtil.markError("Error occured while Initialize Test Suite: ${e.toString()}")
 				
 		}
 	}
@@ -56,26 +50,15 @@ class TestSuiteListener {
 	@AfterTestSuite
 	def afterTestSuite(TestSuiteContext testSuiteContext) {
 		try {
-			KeywordUtil.logInfo("Testsuite Complete, Saving Results...")
-			
-			// Save Result to File
 			ResultsBufferService.saveToFilePerCountry(RESULTS_FILE_PATH)
 			
-			// Count processed URL
-			int processedCount = ResultsBufferService.getProcessedCount()
-			KeywordUtil.logInfo("Processed URL: $processedCount")
-			
-			// Clear Buffer
 			ResultsBufferService.clearBuffer()
 			
-			// Clear URL Cache
 			URLCacheService.clearCache()
 			
-			// Clear Browser
 			WebUI.closeBrowser()
-			
 		} catch (Exception e) {
-			KeywordUtil.markError("Error occured while finishing Test Suite : ${e.toString()}")
+			KeywordUtil.markError("Error occured while finishing Test Suite: ${e.toString()}")
 		}
 	}
 }

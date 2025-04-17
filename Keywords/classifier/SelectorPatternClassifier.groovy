@@ -17,6 +17,10 @@ import internal.GlobalVariable
 
 public class SelectorPatternClassifier {
 	private static final def PAGE_TYPES = [
+		PD: [
+			selector: 'PD/product_detail_header',
+			description: 'Product Detail Header'
+		],
 		PF: [
 			selector: 'PF/product_filter_container',
 			description: 'PF Filter Container'
@@ -24,10 +28,6 @@ public class SelectorPatternClassifier {
 		PCD: [
 			selector: 'PCD/pcd_quick_filter_link',
 			description: 'PCD Filter Container'
-		],
-		PD: [
-			selector: 'PD/product_detail_header',
-			description: 'Product Detail Header'
 		]
 	]
 
@@ -41,10 +41,8 @@ public class SelectorPatternClassifier {
 			def result = CLASSIFICATION_ORDER.find { type ->
 				isElementDisplayed(type)
 			}
-
 			return result ?: "Unclassified"
 		} catch (Exception e) {
-			KeywordUtil.markWarning("Error Occured while classifying ${e.message}")
 			return "Error:DOMInspection"
 		}
 	}
@@ -56,13 +54,7 @@ public class SelectorPatternClassifier {
 		try {
 			return new WebDriverWait(DriverFactory.webDriver, 3).until { driver ->
 				try {
-					def element = WebUI.findWebElement(testObject, 1)
-
-					if (element.displayed) {
-						KeywordUtil.logInfo("Found: ${typeInfo.description}, Classified as: ${type}")
-						return true
-					}
-					return false
+					return WebUI.findWebElement(testObject, 1).displayed
 				} catch (Exception e) {
 					return false
 				}
