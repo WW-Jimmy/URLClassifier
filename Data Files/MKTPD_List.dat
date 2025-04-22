@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataFileEntity>
    <description></description>
-   <name>EX_Data</name>
+   <name>MKTPD_List</name>
    <tag></tag>
    <connectionProperties/>
    <containsHeaders>true</containsHeaders>
    <csvSeperator></csvSeperator>
-   <dataFileGUID>281e996d-2972-4d15-9070-9233fdca85b2</dataFileGUID>
-   <dataSourceUrl>C:\Users\user\Katalon Studio\URLClassifier\Data Files\Sample\Refined\url_exception_list.xlsx</dataSourceUrl>
+   <dataFileGUID>21ea150d-34a8-4d45-bb2b-a163d82c76ce</dataFileGUID>
+   <dataSourceUrl>C:\Users\user\Katalon Studio\URLClassifier\Data Files\Sample\Refined\mktpd_exception_list.xlsx</dataSourceUrl>
    <driver>ExcelFile</driver>
    <isInternalPath>false</isInternalPath>
    <query></query>
    <secureUserAccount>false</secureUserAccount>
-   <sheetName>UK</sheetName>
+   <sheetName>MKTPD</sheetName>
    <usingGlobalDBSetting>false</usingGlobalDBSetting>
 </DataFileEntity>
