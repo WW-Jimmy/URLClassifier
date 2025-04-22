@@ -36,24 +36,50 @@ public class SamsungURLConstants {
 		'sustainability',
 		'multistore',
 	] as Set
-	
-	/*
-	public static final Set<String> PRODUCT_CATEGORIES = [
-		'air-conditioners',
-		'air-care',
-		'audio-devices',
-		'cooking-appliances',
-		'dishwashers',
-		'lifestyle-tvs',
-		'laundry',
-		'microwave-ovens',
-		'monitors',
-		'projectors',
-		'refrigerators',
-		'tvs',
-		'vacuum-cleaners',
-		'washers-and-dryers',
-		'tablets'
+
+	public static final Set<String> MKTPD_PATHS = [
+		'smartphones/galaxy-z-flip6',
+		'smartphones/galaxy-z-fold6',
+		'smartphones/galaxy-s25-ultra',
+		'smartphones/galaxy-s25',
+		'smartphones/galaxy-s24',
+		'smartphones/galaxy-s24-ultra',
+		'smartphones/galaxy-s24-ultra/compare',
+		'smartphones/galaxy-s24-ultra/upgrade',
+		'smartphones/galaxy-s24-ultra/reviews',
+		'smartphones/galaxy-s24/compare',
+		'smartphones/galaxy-s24/upgrade',
+		'smartphones/galaxy-s24/reviews',
+		'smartphones/galaxy-s25/compare',
+		'smartphones/galaxy-s25/reviews',
+		'smartphones/galaxy-s25-ultra/compare',
+		'smartphones/galaxy-s25-ultra/reviews',
+		'smartphones/galaxy-z-flip6/compare',
+		'smartphones/galaxy-z-flip6/reviews',
+		'smartphones/galaxy-z-flip6/upgrade',
+		'smartphones/galaxy-z-fold6/compare',
+		'smartphones/galaxy-z-fold6/reviews',
+		'smartphones/galaxy-z-fold6/upgrade',
+		'mobile/switch-to-galaxy'
 	] as Set
-	*/
+
+	/*
+	 public static final Set<String> PRODUCT_CATEGORIES = [
+	 'air-conditioners',
+	 'air-care',
+	 'audio-devices',
+	 'cooking-appliances',
+	 'dishwashers',
+	 'lifestyle-tvs',
+	 'laundry',
+	 'microwave-ovens',
+	 'monitors',
+	 'projectors',
+	 'refrigerators',
+	 'tvs',
+	 'vacuum-cleaners',
+	 'washers-and-dryers',
+	 'tablets'
+	 ] as Set
+	 */
 }

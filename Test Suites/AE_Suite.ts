@@ -12,30 +12,21 @@
    <rerunImmediately>true</rerunImmediately>
    <testSuiteGuid>9973da31-3216-4651-b11d-88b8ec37370d</testSuiteGuid>
    <testCaseLink>
-      <guid>5020e103-f926-4ee3-88ec-d02f5dd3820f</guid>
+      <guid>4b5a07f9-b86a-48e6-a8e5-43800ca36ab9</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/SamsungURLClassifier</testCaseId>
-      <testDataLink>
-         <combinationType>ONE</combinationType>
-         <id>752a6972-bb95-4ba4-9c83-e7c746956ffb</id>
-         <iterationEntity>
-            <iterationType>ALL</iterationType>
-            <value></value>
-         </iterationEntity>
-         <testDataId>Data Files/AE_Data</testDataId>
-      </testDataLink>
       <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
       <variableLink>
-         <testDataLinkId>752a6972-bb95-4ba4-9c83-e7c746956ffb</testDataLinkId>
-         <type>DATA_COLUMN</type>
-         <value>Country</value>
+         <testDataLinkId></testDataLinkId>
+         <type>DEFAULT</type>
+         <value></value>
          <variableId>f11f06b5-bf5d-435f-b35d-faaf63312670</variableId>
       </variableLink>
       <variableLink>
-         <testDataLinkId>752a6972-bb95-4ba4-9c83-e7c746956ffb</testDataLinkId>
-         <type>DATA_COLUMN</type>
-         <value>URL</value>
+         <testDataLinkId></testDataLinkId>
+         <type>DEFAULT</type>
+         <value></value>
          <variableId>3dd0fabd-2612-4329-92a0-2bf514cf0130</variableId>
       </variableLink>
    </testCaseLink>

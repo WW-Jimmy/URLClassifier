@@ -126,4 +126,13 @@ public class URLUtils {
 		}
 		return finalUrl
 	}
+	
+	@Keyword
+	static String getPathToCheck(String afterDomain, boolean isCN) {
+		if (isCN) return afterDomain
+		if (afterDomain.contains("/")) {
+			return afterDomain.substring(afterDomain.indexOf("/") + 1)
+		}
+		return afterDomain
+	}
 }
