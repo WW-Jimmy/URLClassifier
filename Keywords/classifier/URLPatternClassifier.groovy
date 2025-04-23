@@ -18,7 +18,7 @@ public class URLPatternClassifier {
 		def first = isCN ? segments[0] : segments[1]
 		def last = segments ? segments[-1] : ""
 
-		if (Constants.MKTPD_PATHS.contains(mktpdPath))
+		if (mktpdPath in Constants.MKTPD_PATHS)
 			return "MKTPD"
 
 		if (first in Constants.OOS_PATHS || last == "buy" || segments.any { it.contains("buying-guide") })
